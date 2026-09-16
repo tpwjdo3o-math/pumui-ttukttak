@@ -2,13 +2,13 @@
  * 품의뚝딱
  * Vercel Function + Gemini API
  *
- * 1순위: gemini-2.5-flash
- * 2순위: gemini-2.5-flash-lite
+ * 1순위: Gemini 3.5 Flash
+ * 2순위: Gemini 3.5 Flash-Lite
  */
 
 const MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.5-flash-lite",
+  "gemini-3.5-flash",
+  "gemini-3.5-flash-lite",
 ];
 
 
@@ -18,41 +18,29 @@ const MODELS = [
 
 export default async function handler(req, res) {
 
-  res.setHeader(
-    "Cache-Control",
-    "no-store"
-  );
+  res.setHeader("Cache-Control", "no-store");
 
-
-  /* POST만 허용 */
   if (req.method !== "POST") {
-
     return res.status(405).json({
       success: false,
       error: "POST 요청만 사용할 수 있습니다.",
     });
-
   }
 
 
   try {
 
     /* =====================================================
-       API KEY
+       Gemini API KEY
     ===================================================== */
 
-    const apiKey =
-      process.env.GEMINI_API_KEY;
-
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-
       return res.status(500).json({
         success: false,
-        error:
-          "GEMINI_API_KEY가 Vercel에 설정되어 있지 않습니다.",
+        error: "GEMINI_API_KEY가 Vercel에 설정되어 있지 않습니다.",
       });
-
     }
 
 
@@ -65,24 +53,9 @@ export default async function handler(req, res) {
         ? JSON.parse(req.body)
         : req.body || {};
 
-
-    const title =
-      String(
-        body.title || ""
-      ).trim();
-
-
-    const relatedDoc =
-      String(
-        body.relatedDoc || ""
-      ).trim();
-
-
-    const extraInfo =
-      String(
-        body.extraInfo || ""
-      ).trim();
-
+    const title = String(body.title || "").trim();
+    const relatedDoc = String(body.relatedDoc || "").trim();
+    const extraInfo = String(body.extraInfo || "").trim();
 
     const images =
       Array.isArray(body.images)
@@ -91,24 +64,18 @@ export default async function handler(req, res) {
 
 
     if (!title) {
-
       return res.status(400).json({
         success: false,
-        error:
-          "품의 제목을 입력해 주세요.",
+        error: "품의 제목을 입력해 주세요.",
       });
-
     }
 
 
     if (images.length === 0) {
-
       return res.status(400).json({
         success: false,
-        error:
-          "장바구니 이미지가 없습니다.",
+        error: "장바구니 이미지가 없습니다.",
       });
-
     }
 
 
@@ -156,8 +123,7 @@ polished_title에는
 "수학 교과 운영 물품 구입"
 
 
-2) 물품 구매 목적이면
-문맥에 맞게 다음과 같이 정리합니다.
+2) 물품 구매 목적이면 문맥에 맞게 다음과 같이 정리합니다.
 
 "○○ 운영 물품 구입"
 "○○ 활동 물품 구입"
@@ -174,8 +140,7 @@ polished_title에는
 
 
 4) 사용자가 제공하지 않은
-연도, 학기, 사업명, 행사명은
-임의로 추가하지 마세요.
+연도, 학기, 사업명, 행사명은 임의로 추가하지 마세요.
 
 5) 사용자가 입력한 연도·학기는 유지하세요.
 
@@ -214,8 +179,7 @@ polished_title에는
 
 색상, 사이즈, 모델, 용량,
 구성수량, 세트구성 등은
-가능하면 품명과 분리하여
-규격에 작성하세요.
+가능하면 품명과 분리하여 규격에 작성하세요.
 
 
 ==================================================
@@ -273,8 +237,7 @@ warnings에 이유를 기록하세요.
 - 무료배송
 
 
-유료 배송비는
-반드시 별도의 품목 행으로 생성하세요.
+유료 배송비는 반드시 별도의 품목 행으로 생성하세요.
 
 
 예:
@@ -331,8 +294,7 @@ shipping
 각각 별도 배송비 행을 생성하세요.
 
 
-무료배송은
-품목으로 생성하지 마세요.
+무료배송은 품목으로 생성하지 마세요.
 
 
 배송비 귀속이 불확실하면
@@ -399,7 +361,6 @@ note에 이유를 작성하세요.
 ==================================================
 
 purpose_sentence에는
-
 polished_title과 추가 설명을 참고하여
 학교 공문서에 적합한 자연스러운
 품의 개요 첫 문장을 작성하세요.
@@ -424,25 +385,16 @@ purpose_sentence:
 
 
 purpose_sentence 앞에는
+1., 2., 가., 나. 등의 번호를 붙이지 마세요.
 
-1.
-2.
-가.
-나.
-
-등의 번호를 붙이지 마세요.
-
-
-관련 문서는
-purpose_sentence 안에 넣지 마세요.
-
+관련 문서는 purpose_sentence 안에 넣지 마세요.
 
 반드시 지정된 JSON 형식으로 반환하세요.
 `;
 
 
     /* =====================================================
-       Gemini Parts
+       Gemini 입력
     ===================================================== */
 
     const parts = [
@@ -454,17 +406,12 @@ purpose_sentence 안에 넣지 마세요.
 
     for (const dataUrl of images) {
 
-      const parsed =
-        parseDataUrl(dataUrl);
-
+      const parsed = parseDataUrl(dataUrl);
 
       parts.push({
         inlineData: {
-          mimeType:
-            parsed.mimeType,
-
-          data:
-            parsed.base64,
+          mimeType: parsed.mimeType,
+          data: parsed.base64,
         },
       });
 
@@ -585,7 +532,7 @@ purpose_sentence 안에 넣지 마세요.
 
 
     /* =====================================================
-       Gemini Payload
+       Gemini API Payload
     ===================================================== */
 
     const payload = {
@@ -593,7 +540,7 @@ purpose_sentence 안에 넣지 마세요.
       contents: [
         {
           role: "user",
-          parts,
+          parts: parts,
         },
       ],
 
@@ -602,10 +549,8 @@ purpose_sentence 안에 넣지 마세요.
         responseMimeType:
           "application/json",
 
-        responseSchema,
-
-        temperature:
-          0.1,
+        responseSchema:
+          responseSchema,
 
       },
 
@@ -628,7 +573,7 @@ purpose_sentence 안에 넣지 마세요.
 
 
     /* =====================================================
-       응답 텍스트
+       응답 확인
     ===================================================== */
 
     if (
@@ -643,12 +588,8 @@ purpose_sentence 안에 넣지 마세요.
     }
 
 
-    const candidate =
-      gemini.candidates[0];
-
-
     const outputText =
-      candidate
+      gemini.candidates[0]
         ?.content
         ?.parts
         ?.map(
@@ -668,7 +609,7 @@ purpose_sentence 안에 넣지 마세요.
 
 
     /* =====================================================
-       JSON 파싱
+       JSON 변환
     ===================================================== */
 
     let analyzed;
@@ -677,7 +618,9 @@ purpose_sentence 안에 넣지 마세요.
     try {
 
       analyzed =
-        JSON.parse(outputText);
+        JSON.parse(
+          outputText
+        );
 
     } catch (error) {
 
@@ -710,16 +653,16 @@ purpose_sentence 안에 넣지 마세요.
 
 
     /* =====================================================
-       보조 모델 사용 안내
+       Flash-Lite 사용 시 안내
     ===================================================== */
 
     if (
       result.model ===
-      "gemini-2.5-flash-lite"
+      "gemini-3.5-flash-lite"
     ) {
 
       analyzed.warnings.unshift(
-        "Gemini 서버 혼잡으로 보조 모델을 사용했습니다. 품목과 금액을 한 번 더 확인해 주세요."
+        "Gemini 서버 혼잡으로 보조 모델(3.5 Flash-Lite)을 사용했습니다. 품목과 금액을 한 번 더 확인해 주세요."
       );
 
     }
@@ -737,12 +680,10 @@ purpose_sentence 안에 넣지 마세요.
             item.quantity
           );
 
-
         const unitPrice =
           Number(
             item.unit_price
           );
-
 
         const amount =
           Number(
@@ -797,18 +738,16 @@ purpose_sentence 안에 넣지 마세요.
 
 
     /* =====================================================
-       정상 응답
+       성공
     ===================================================== */
 
     return res.status(200).json({
 
       success: true,
 
-      data:
-        analyzed,
+      data: analyzed,
 
-      model:
-        result.model,
+      model: result.model,
 
     });
 
@@ -834,7 +773,9 @@ purpose_sentence 안에 넣지 마세요.
 
 
 /* =========================================================
-   Gemini 호출 + 재시도 + 모델 대체
+   Gemini 호출
+   - 서버 혼잡 시 재시도
+   - 실패하면 Flash-Lite로 자동 변경
 ========================================================= */
 
 async function callGeminiWithFallback(
@@ -865,7 +806,6 @@ async function callGeminiWithFallback(
             attempt - 1
           );
 
-
         await sleep(wait);
 
       }
@@ -885,7 +825,8 @@ async function callGeminiWithFallback(
             url,
             {
 
-              method: "POST",
+              method:
+                "POST",
 
               headers: {
 
@@ -938,9 +879,13 @@ async function callGeminiWithFallback(
       if (response.ok) {
 
         return {
-          model,
+
+          model:
+            model,
+
           data:
             responseData,
+
         };
 
       }
@@ -957,19 +902,25 @@ async function callGeminiWithFallback(
         apiMessage;
 
 
+      console.log(
+        `Gemini 오류 / ${model} / HTTP ${response.status} / ${apiMessage}`
+      );
+
+
       /*
-       * 429 = 사용량/속도 제한
-       * 503 = 일시적인 서버 혼잡
+       * 429 = 사용량 제한
+       * 500 / 502 / 503 / 504 = 일시적 서버 오류
+       *
+       * 재시도 후 다음 모델로 넘어감
        */
 
       if (
         response.status === 429 ||
-        response.status === 503
+        response.status === 500 ||
+        response.status === 502 ||
+        response.status === 503 ||
+        response.status === 504
       ) {
-
-        console.log(
-          `Gemini 재시도: ${model}, ${response.status}, ${attempt + 1}회`
-        );
 
         continue;
 
@@ -977,9 +928,19 @@ async function callGeminiWithFallback(
 
 
       /*
-       * 다른 오류는
-       * 재시도로 해결될 가능성이 낮음
+       * 특정 모델을 계정에서 사용할 수 없는 경우에도
+       * 다음 모델을 시도
        */
+
+      if (
+        response.status === 400 ||
+        response.status === 404
+      ) {
+
+        break;
+
+      }
+
 
       throw new Error(
         `Gemini API 오류: ${apiMessage}`
@@ -991,14 +952,16 @@ async function callGeminiWithFallback(
 
 
   throw new Error(
-    `현재 Gemini 서버가 혼잡하거나 무료 사용 한도에 도달했습니다. 잠시 후 다시 시도해 주세요. (${lastError})`
+    "Gemini 모델 호출에 모두 실패했습니다. 잠시 후 다시 시도해 주세요. (" +
+    lastError +
+    ")"
   );
 
 }
 
 
 /* =========================================================
-   이미지 Data URL 파싱
+   이미지 Data URL
 ========================================================= */
 
 function parseDataUrl(
