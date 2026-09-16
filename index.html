@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>품의뚝딱</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Pretendard,
+        "Noto Sans KR",
+        Arial,
+        sans-serif;
+      background: #f7f5fb;
+      color: #242424;
+    }
+
+    .container {
+      width: min(760px, calc(100% - 32px));
+      margin: 50px auto;
+    }
+
+    /* 상단 로고 */
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .magic-icon {
+      font-size: 52px;
+      margin-bottom: 4px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+      color: #5b3da8;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      color: #777;
+      font-size: 16px;
+    }
+
+    /* 카드 */
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 8px 30px rgba(50, 30, 80, 0.08);
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 9px;
+      font-size: 15px;
+    }
+
+    .required {
+      color: #805ad5;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #ddd9e5;
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #7653c6;
+      box-shadow: 0 0 0 3px rgba(118, 83, 198, 0.1);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #aaa6b0;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .helper {
+      font-size: 13px;
+      color: #999;
+      margin-top: 7px;
+    }
+
+    /* 업로드 영역 */
+
+    .upload-zone {
+      border: 2px dashed #b9a7df;
+      border-radius: 16px;
+      min-height: 190px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: #faf8ff;
+      transition: 0.2s;
+      outline: none;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragging,
+    .upload-zone:focus {
+      background: #f3effd;
+      border-color: #7653c6;
+    }
+
+    .upload-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .upload-main {
+      font-weight: 700;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .upload-sub {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #777;
+    }
+
+    .shortcut {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: #ebe6f5;
+      color: #5b3da8;
+      font-weight: 700;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    /* 이미지 미리보기 */
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+
+    .preview-title {
+      font-weight: 700;
+    }
+
+    .image-count {
+      font-size: 13px;
+      color: #7653c6;
+      font-weight: 700;
+    }
+
+    .preview-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .preview-item {
+      position: relative;
+      border: 1px solid #e2dfea;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fafafa;
+      aspect-ratio: 4 / 3;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .delete-button {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(20, 20, 20, 0.75);
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .empty-preview {
+      display: none;
+    }
+
+    /* 생성 버튼 */
+
+    .make-button {
+      width: 100%;
+      margin-top: 30px;
+      border: none;
+      border-radius: 13px;
+      padding: 16px;
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      background: #6546b4;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .make-button:hover {
+      transform: translateY(-1px);
+      background: #5639a2;
+    }
+
+    /* 안내 메시지 */
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f1edfc;
+      color: #513591;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 25px auto;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .header h1 {
+        font-size: 30px;
+      }
+
+      .preview-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <main class="container">
+
+    <header class="header">
+      <div class="magic-icon">🪄</div>
+      <h1>품의뚝딱</h1>
+      <p>장바구니 캡처 한 장으로 품의 준비를 뚝딱!</p>
+    </header>
+
+
+    <section class="card">
+
+      <!-- 품의 제목 -->
+
+      <div class="form-group">
+
+        <label for="title">
+          품의 제목 <span class="required">*</span>
+        </label>
+
+        <input
+          id="title"
+          type="text"
+          placeholder="예: 2026. 2학기 수학과 수업 운영 물품 구입"
+        >
+
+      </div>
+
+
+      <!-- 관련 문서 -->
+
+      <div class="form-group">
+
+        <label for="relatedDoc">
+          관련 문서
+        </label>
+
+        <input
+          id="relatedDoc"
+          type="text"
+          placeholder="예: 원봉중학교-1234(2026. 9. 16.)"
+        >
+
+        <div class="helper">
+          관련 문서가 없는 경우 비워두세요.
+        </div>
+
+      </div>
+
+
+      <!-- 추가 설명 -->
+
+      <div class="form-group">
+
+        <label for="extraInfo">
+          추가 설명
+        </label>
+
+        <textarea
+          id="extraInfo"
+          placeholder="예: 학생 체험활동에 사용할 재료이며, 수업 운영 목적에 맞게 작성해 주세요."
+        ></textarea>
+
+        <div class="helper">
+          품의 목적이나 AI가 알아야 할 내용이 있는 경우에만 입력하세요.
+        </div>
+
+      </div>
+
+
+      <!-- 이미지 -->
+
+      <div class="form-group">
+
+        <label>
+          장바구니 이미지 <span class="required">*</span>
+        </label>
+
+
+        <div
+          id="uploadZone"
+          class="upload-zone"
+          tabindex="0"
+        >
+
+          <div class="upload-icon">📸</div>
+
+          <div class="upload-main">
+            장바구니 캡처를 올려주세요
+          </div>
+
+          <div class="upload-sub">
+
+            클릭해서 이미지 파일을 선택하거나<br>
+
+            화면 캡처 후
+            <span class="shortcut">Ctrl + V</span>
+            로 바로 붙여넣으세요.<br>
+
+            여러 장도 가능합니다.
+
+          </div>
+
+        </div>
+
+
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          multiple
+        >
+
+
+        <div
+          id="previewArea"
+          class="empty-preview"
+        >
+
+          <div class="preview-header">
+
+            <span class="preview-title">
+              첨부 이미지
+            </span>
+
+            <span
+              id="imageCount"
+              class="image-count"
+            >
+              0장
+            </span>
+
+          </div>
+
+
+          <div
+            id="previewList"
+            class="preview-list"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="makeButton"
+        class="make-button"
+        type="button"
+      >
+        🪄 품의 만들기
+      </button>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+<script>
+
+  const uploadZone =
+    document.getElementById("uploadZone");
+
+  const fileInput =
+    document.getElementById("fileInput");
+
+  const previewArea =
+    document.getElementById("previewArea");
+
+  const previewList =
+    document.getElementById("previewList");
+
+  const imageCount =
+    document.getElementById("imageCount");
+
+  const makeButton =
+    document.getElementById("makeButton");
+
+  const message =
+    document.getElementById("message");
+
+
+  /*
+   * 선택된 이미지들을 보관합니다.
+   */
+
+  let selectedImages = [];
+
+
+  /*
+   * 파일 선택 창 열기
+   */
+
+  uploadZone.addEventListener(
+    "click",
+    () => fileInput.click()
+  );
+
+
+  /*
+   * 키보드 접근성
+   */
+
+  uploadZone.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
+
+        event.preventDefault();
+
+        fileInput.click();
+
+      }
+
+    }
+  );
+
+
+  /*
+   * 일반 파일 업로드
+   */
+
+  fileInput.addEventListener(
+    "change",
+    (event) => {
+
+      addImages(
+        Array.from(event.target.files)
+      );
+
+      /*
+       * 같은 파일을 다시 선택할 수 있도록 초기화
+       */
+
+      fileInput.value = "";
+
+    }
+  );
+
+
+  /*
+   * 드래그 앤 드롭
+   */
+
+  uploadZone.addEventListener(
+    "dragover",
+    (event) => {
+
+      event.preventDefault();
+
+      uploadZone.classList.add(
+        "dragging"
+      );
+
+    }
+  );
+
+
+  uploadZone.addEventListener(
+    "dragleave",
+    () => {
+
+      uploadZone.classList.remove(
+        "dragging"
+      );
+
+    }
+  );
+
+
+  uploadZone.addEventListener(
+    "drop",
+    (event) => {
+
+      event.preventDefault();
+
+      uploadZone.classList.remove(
+        "dragging"
+      );
+
+      addImages(
+        Array.from(event.dataTransfer.files)
+      );
+
+    }
+  );
+
+
+  /*
+   * 클립보드 이미지 붙여넣기
+   *
+   * 제목/관련문서/추가설명 입력칸에
+   * 텍스트를 붙여넣는 것은 방해하지 않습니다.
+   */
+
+  document.addEventListener(
+    "paste",
+    (event) => {
+
+      const target =
+        event.target;
+
+      const isTextField =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA";
+
+      /*
+       * 입력칸에서는 일반 텍스트 붙여넣기를 허용
+       */
+
+      if (isTextField) {
+        return;
+      }
+
+
+      const clipboardItems =
+        event.clipboardData?.items;
+
+      if (!clipboardItems) {
+        return;
+      }
+
+
+      const pastedImages = [];
+
+
+      for (const item of clipboardItems) {
+
+        if (
+          item.kind === "file" &&
+          item.type.startsWith("image/")
+        ) {
+
+          const file =
+            item.getAsFile();
+
+          if (file) {
+            pastedImages.push(file);
+          }
+
+        }
+
+      }
+
+
+      if (pastedImages.length > 0) {
+
+        event.preventDefault();
+
+        addImages(pastedImages);
+
+      }
+
+    }
+  );
+
+
+  /*
+   * 이미지 목록에 추가
+   */
+
+  function addImages(files) {
+
+    const imageFiles =
+      files.filter(
+        file =>
+          file.type.startsWith("image/")
+      );
+
+
+    if (imageFiles.length === 0) {
+
+      showMessage(
+        "이미지 파일을 확인해 주세요."
+      );
+
+      return;
+
+    }
+
+
+    imageFiles.forEach(
+      file => {
+
+        selectedImages.push({
+          file: file,
+          previewUrl:
+            URL.createObjectURL(file)
+        });
+
+      }
+    );
+
+
+    renderImages();
+
+    hideMessage();
+
+  }
+
+
+  /*
+   * 이미지 화면 갱신
+   */
+
+  function renderImages() {
+
+    previewList.innerHTML = "";
+
+
+    if (selectedImages.length === 0) {
+
+      previewArea.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    previewArea.style.display =
+      "block";
+
+
+    imageCount.textContent =
+      `${selectedImages.length}장`;
+
+
+    selectedImages.forEach(
+      (image, index) => {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "preview-item";
+
+
+        const img =
+          document.createElement("img");
+
+        img.src =
+          image.previewUrl;
+
+        img.alt =
+          `장바구니 이미지 ${index + 1}`;
+
+
+        const deleteButton =
+          document.createElement("button");
+
+        deleteButton.className =
+          "delete-button";
+
+        deleteButton.type =
+          "button";
+
+        deleteButton.textContent =
+          "×";
+
+        deleteButton.title =
+          "이미지 삭제";
+
+
+        deleteButton.addEventListener(
+          "click",
+          (event) => {
+
+            event.stopPropagation();
+
+            removeImage(index);
+
+          }
+        );
+
+
+        item.appendChild(img);
+
+        item.appendChild(
+          deleteButton
+        );
+
+        previewList.appendChild(
+          item
+        );
+
+      }
+    );
+
+  }
+
+
+  /*
+   * 이미지 삭제
+   */
+
+  function removeImage(index) {
+
+    URL.revokeObjectURL(
+      selectedImages[index].previewUrl
+    );
+
+    selectedImages.splice(
+      index,
+      1
+    );
+
+    renderImages();
+
+  }
+
+
+  /*
+   * 안내 메시지
+   */
+
+  function showMessage(text) {
+
+    message.textContent =
+      text;
+
+    message.style.display =
+      "block";
+
+  }
+
+
+  function hideMessage() {
+
+    message.style.display =
+      "none";
+
+  }
+
+
+  /*
+   * 품의 만들기
+   *
+   * 현재 1단계에서는
+   * 입력값과 이미지 준비 여부까지만 확인합니다.
+   * AI 연결은 다음 단계에서 추가합니다.
+   */
+
+  makeButton.addEventListener(
+    "click",
+    () => {
+
+      const title =
+        document
+          .getElementById("title")
+          .value
+          .trim();
+
+
+      if (!title) {
+
+        showMessage(
+          "품의 제목을 입력해 주세요."
+        );
+
+        document
+          .getElementById("title")
+          .focus();
+
+        return;
+
+      }
+
+
+      if (
+        selectedImages.length === 0
+      ) {
+
+        showMessage(
+          "장바구니 이미지를 업로드하거나 Ctrl+V로 붙여넣어 주세요."
+        );
+
+        uploadZone.focus();
+
+        return;
+
+      }
+
+
+      showMessage(
+        `✅ 준비 완료! 장바구니 이미지 ${selectedImages.length}장을 정상적으로 받았습니다. 다음 단계에서 이 이미지들을 AI가 분석하도록 연결합니다.`
+      );
+
+    }
+  );
+
+</script>
+
+
+</body>
+</html>
