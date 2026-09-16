@@ -1,26 +1,44 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>품의뚝딱</title>
 
+
+  <!-- Excel 파일 생성 -->
+  <script
+    src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js">
+  </script>
+
+
   <style>
+
     * {
       box-sizing: border-box;
     }
 
+
     body {
       margin: 0;
+
       font-family:
-        Pretendard,
-        "Noto Sans KR",
         Arial,
+        "Noto Sans KR",
         sans-serif;
+
       background: #f7f5fb;
+
       color: #242424;
     }
+
 
     button,
     input,
@@ -28,558 +46,1421 @@
       font-family: inherit;
     }
 
+
     .container {
-      width: min(900px, calc(100% - 32px));
-      margin: 45px auto;
+
+      width:
+        min(
+          980px,
+          calc(100% - 30px)
+        );
+
+      margin:
+        40px auto;
+
     }
 
-    /* 상단 */
+
+    /* ==============================
+       상단
+    ============================== */
 
     .header {
+
       text-align: center;
-      margin-bottom: 30px;
+
+      margin-bottom: 28px;
+
     }
 
-    .magic-icon {
-      font-size: 54px;
-      margin-bottom: 4px;
+
+    .magic {
+
+      font-size: 55px;
+
     }
 
-    .header h1 {
-      margin: 0;
+
+    h1 {
+
+      margin:
+        3px 0 0;
+
       font-size: 38px;
+
       color: #5b3da8;
+
     }
 
-    .header p {
-      margin: 10px 0 0;
+
+    .subtitle {
+
+      margin-top: 9px;
+
       color: #777;
-      font-size: 16px;
+
     }
 
-    /* 기본 카드 */
+
+    .version {
+
+      display: inline-block;
+
+      margin-top: 10px;
+
+      padding:
+        5px 10px;
+
+      border-radius: 20px;
+
+      background: #eee8fb;
+
+      color: #6546b4;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+    }
+
+
+    /* ==============================
+       카드
+    ============================== */
 
     .card {
+
       background: white;
+
       border-radius: 20px;
-      padding: 32px;
-      box-shadow: 0 8px 30px rgba(50, 30, 80, 0.08);
+
+      padding: 30px;
+
+      box-shadow:
+        0 8px 30px
+        rgba(50, 30, 80, .08);
+
     }
 
-    .form-group {
-      margin-bottom: 24px;
+
+    .group {
+
+      margin-bottom: 23px;
+
     }
+
 
     label {
+
       display: block;
-      font-weight: 700;
-      margin-bottom: 9px;
+
+      margin-bottom: 8px;
+
       font-size: 15px;
+
+      font-weight: 700;
+
     }
 
+
     .required {
-      color: #805ad5;
+
+      color: #7653c6;
+
     }
+
 
     input,
     textarea {
+
       width: 100%;
-      border: 1px solid #ddd9e5;
+
+      padding:
+        13px 14px;
+
+      border:
+        1px solid #ddd9e5;
+
       border-radius: 10px;
-      padding: 13px 14px;
-      font-size: 15px;
+
       outline: none;
-      transition: 0.2s;
+
+      font-size: 15px;
+
     }
+
 
     input:focus,
     textarea:focus {
+
       border-color: #7653c6;
-      box-shadow: 0 0 0 3px rgba(118, 83, 198, 0.1);
+
+      box-shadow:
+        0 0 0 3px
+        rgba(118, 83, 198, .1);
+
     }
+
 
     input::placeholder,
     textarea::placeholder {
+
       color: #aaa6b0;
+
     }
+
 
     textarea {
-      resize: vertical;
+
       min-height: 90px;
+
+      resize: vertical;
+
     }
+
 
     .helper {
-      margin-top: 7px;
+
+      margin-top: 6px;
+
       color: #999;
+
       font-size: 13px;
+
       line-height: 1.6;
+
     }
 
-    /* 이미지 업로드 */
+
+    /* ==============================
+       이미지 업로드
+    ============================== */
 
     .upload-zone {
-      border: 2px dashed #b9a7df;
+
+      padding:
+        30px 20px;
+
+      border:
+        2px dashed #b9a7df;
+
       border-radius: 16px;
-      min-height: 190px;
-      padding: 30px 20px;
-      text-align: center;
-      cursor: pointer;
+
       background: #faf8ff;
-      transition: 0.2s;
+
+      text-align: center;
+
+      cursor: pointer;
+
       outline: none;
+
+      transition: .2s;
+
     }
+
 
     .upload-zone:hover,
-    .upload-zone.dragging,
-    .upload-zone:focus {
+    .upload-zone:focus,
+    .upload-zone.dragging {
+
       background: #f3effd;
+
       border-color: #7653c6;
+
     }
+
 
     .upload-icon {
+
       font-size: 42px;
-      margin-bottom: 10px;
+
     }
 
-    .upload-main {
+
+    .upload-title {
+
+      margin-top: 7px;
+
       font-size: 17px;
+
       font-weight: 700;
-      margin-bottom: 8px;
+
     }
 
-    .upload-sub {
+
+    .upload-text {
+
+      margin-top: 8px;
+
       color: #777;
-      font-size: 14px;
+
       line-height: 1.8;
+
+      font-size: 14px;
+
     }
 
-    .shortcut {
-      display: inline-block;
-      padding: 2px 7px;
+
+    kbd {
+
+      padding:
+        3px 7px;
+
       border-radius: 5px;
+
       background: #ebe6f5;
+
       color: #5b3da8;
-      font-weight: 700;
+
+      font-weight: bold;
+
     }
+
 
     #fileInput {
+
       display: none;
+
     }
 
-    /* 미리보기 */
+
+    /* ==============================
+       이미지 미리보기
+    ============================== */
 
     #previewArea {
+
       display: none;
-      margin-top: 20px;
+
+      margin-top: 17px;
+
     }
 
-    .preview-header {
+
+    .preview-head {
+
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
 
-    .preview-title {
+      justify-content:
+        space-between;
+
+      margin-bottom: 9px;
+
       font-weight: 700;
+
     }
 
-    .image-count {
+
+    #imageCount {
+
       color: #7653c6;
-      font-size: 13px;
-      font-weight: 700;
+
     }
+
 
     .preview-list {
+
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 10px;
+
     }
 
-    .preview-item {
+
+    .preview {
+
       position: relative;
-      border: 1px solid #e2dfea;
-      border-radius: 12px;
+
       overflow: hidden;
-      background: #fafafa;
-      aspect-ratio: 4 / 3;
-    }
 
-    .preview-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+      border:
+        1px solid #ddd;
 
-    .delete-button {
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      width: 30px;
-      height: 30px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(20, 20, 20, 0.75);
-      color: white;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* 실행 버튼 */
-
-    .make-button {
-      width: 100%;
-      margin-top: 10px;
-      padding: 16px;
-      border: none;
-      border-radius: 13px;
-      background: #6546b4;
-      color: white;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: 800;
-      transition: 0.2s;
-    }
-
-    .make-button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      background: #5639a2;
-    }
-
-    .make-button:disabled {
-      cursor: wait;
-      opacity: 0.7;
-    }
-
-    /* 메시지 */
-
-    .message {
-      display: none;
-      margin-top: 18px;
-      padding: 15px 16px;
-      border-radius: 12px;
-      background: #f1edfc;
-      color: #513591;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    /* 분석 결과 */
-
-    .result-card {
-      margin-top: 30px;
-      background: white;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 8px 30px rgba(50, 30, 80, 0.08);
-    }
-
-    .result-card h2 {
-      margin: 0 0 18px;
-      color: #4f368e;
-      font-size: 24px;
-    }
-
-    .analysis-summary {
-      padding: 14px 16px;
-      margin-bottom: 20px;
-      background: #f6f2ff;
       border-radius: 11px;
-      line-height: 1.7;
+
+      aspect-ratio:
+        4 / 3;
+
     }
 
-    .result-section {
-      margin-top: 24px;
+
+    .preview img {
+
+      width: 100%;
+
+      height: 100%;
+
+      object-fit: cover;
+
     }
 
-    .result-section-title {
-      margin-bottom: 9px;
+
+    .remove-image {
+
+      position: absolute;
+
+      top: 6px;
+
+      right: 6px;
+
+      width: 30px;
+
+      height: 30px;
+
+      padding: 0;
+
+      border: 0;
+
+      border-radius: 50%;
+
+      background:
+        rgba(20, 20, 20, .75);
+
+      color: white;
+
+      cursor: pointer;
+
+      font-size: 18px;
+
+    }
+
+
+    /* ==============================
+       만들기 버튼
+    ============================== */
+
+    .make {
+
+      width: 100%;
+
+      padding: 16px;
+
+      border: 0;
+
+      border-radius: 13px;
+
+      background: #6546b4;
+
+      color: white;
+
+      cursor: pointer;
+
+      font-size: 18px;
+
       font-weight: 800;
+
     }
 
-    .purpose-sentence {
-      padding: 14px;
-      border: 1px solid #ebe8ef;
-      border-radius: 10px;
-      background: #fafafa;
-      line-height: 1.8;
-      white-space: pre-wrap;
+
+    .make:hover:not(:disabled) {
+
+      background: #5639a2;
+
     }
+
+
+    .make:disabled {
+
+      opacity: .65;
+
+      cursor: wait;
+
+    }
+
+
+    /* ==============================
+       상태메시지
+    ============================== */
+
+    #message {
+
+      display: none;
+
+      margin-top: 17px;
+
+      padding: 15px;
+
+      border-radius: 11px;
+
+      background: #f1edfc;
+
+      color: #513591;
+
+      line-height: 1.7;
+
+    }
+
+
+    /* ==============================
+       결과
+    ============================== */
+
+    #result {
+
+      display: none;
+
+      margin-top: 28px;
+
+    }
+
+
+    .result-title {
+
+      margin:
+        0 0 18px;
+
+      color: #4f368e;
+
+      font-size: 25px;
+
+    }
+
+
+    .summary {
+
+      padding: 14px;
+
+      border-radius: 10px;
+
+      background: #f6f2ff;
+
+      margin-bottom: 25px;
+
+      line-height: 1.7;
+
+    }
+
+
+    .section {
+
+      margin-top: 27px;
+
+    }
+
+
+    .section-head {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content:
+        space-between;
+
+      gap: 10px;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .section-title {
+
+      font-size: 17px;
+
+      font-weight: 800;
+
+    }
+
+
+    .result-text {
+
+      padding: 15px;
+
+      border:
+        1px solid #e5e2eb;
+
+      border-radius: 10px;
+
+      background: #fafafa;
+
+      white-space: pre-wrap;
+
+      line-height: 1.8;
+
+      font-size: 15px;
+
+    }
+
+
+    .overview {
+
+      min-height: 110px;
+
+    }
+
+
+    /* ==============================
+       결과 제목
+    ============================== */
+
+    .final-title-input {
+
+      font-size: 16px;
+
+      font-weight: 700;
+
+      background: #fafafa;
+
+    }
+
+
+    .title-note {
+
+      margin-top: 7px;
+
+      font-size: 12px;
+
+      color: #999;
+
+    }
+
+
+    /* ==============================
+       버튼
+    ============================== */
+
+    .small-button {
+
+      border:
+        1px solid #cfc5e8;
+
+      border-radius: 9px;
+
+      background: white;
+
+      color: #5b3da8;
+
+      padding:
+        8px 12px;
+
+      cursor: pointer;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+
+    }
+
+
+    .small-button:hover {
+
+      background: #f4f0fc;
+
+    }
+
+
+    .action-row {
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 9px;
+
+      margin-top: 13px;
+
+    }
+
+
+    .primary-action {
+
+      border: 0;
+
+      border-radius: 10px;
+
+      padding:
+        12px 16px;
+
+      cursor: pointer;
+
+      font-weight: 800;
+
+      background: #6546b4;
+
+      color: white;
+
+    }
+
+
+    /* ==============================
+       품목표
+    ============================== */
 
     .table-wrap {
+
       overflow-x: auto;
+
     }
 
-    .result-table {
+
+    table {
+
       width: 100%;
-      min-width: 760px;
+
+      min-width: 900px;
+
       border-collapse: collapse;
+
     }
 
-    .result-table th {
-      padding: 11px 8px;
-      border: 1px solid #ddd9e5;
-      background: #f3effd;
-      font-size: 13px;
-      white-space: nowrap;
-    }
 
-    .result-table td {
-      padding: 11px 8px;
-      border: 1px solid #ddd9e5;
-      font-size: 13px;
+    th,
+    td {
+
+      border:
+        1px solid #ddd9e5;
+
+      padding: 7px;
+
       text-align: center;
+
+      font-size: 13px;
+
     }
 
-    .shipping-row {
-      background: #faf8ff;
+
+    th {
+
+      background: #f3effd;
+
+      white-space: nowrap;
+
     }
 
-    .warning-box {
-      margin-top: 20px;
-      padding: 15px;
+
+    td input {
+
+      width: 100%;
+
+      padding: 8px;
+
+      font-size: 13px;
+
+      text-align: center;
+
+      border-radius: 8px;
+
+    }
+
+
+    .name-input {
+
+      min-width: 180px;
+
+      text-align: left !important;
+
+    }
+
+
+    .spec-input {
+
+      min-width: 130px;
+
+    }
+
+
+    .unit-input {
+
+      min-width: 70px;
+
+    }
+
+
+    .number-input {
+
+      min-width: 90px;
+
+    }
+
+
+    .amount-cell {
+
+      min-width: 100px;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+
+    }
+
+
+    .shipping {
+
+      background: #fffaf0;
+
+    }
+
+
+    .delete-row {
+
+      border: 0;
+
+      border-radius: 7px;
+
+      background: #fff0f0;
+
+      color: #c33;
+
+      padding:
+        7px 9px;
+
+      cursor: pointer;
+
+    }
+
+
+    .warning {
+
+      margin-top: 18px;
+
+      padding: 14px;
+
+      background: #fff5dc;
+
       border-radius: 10px;
-      background: #fff6df;
-      color: #6a5200;
+
       line-height: 1.8;
-      font-size: 14px;
+
     }
 
-    .success-box {
-      margin-top: 20px;
-      padding: 15px;
+
+    .total-box {
+
+      margin-top: 14px;
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      align-items: center;
+
+      gap: 12px;
+
+      font-weight: 800;
+
+      font-size: 16px;
+
+    }
+
+
+    .total-money {
+
+      color: #5b3da8;
+
+      font-size: 20px;
+
+    }
+
+
+    /* ==============================
+       토스트
+    ============================== */
+
+    .toast {
+
+      position: fixed;
+
+      left: 50%;
+
+      bottom: 30px;
+
+      transform:
+        translateX(-50%);
+
+      background:
+        rgba(40,40,40,.9);
+
+      color: white;
+
+      padding:
+        11px 17px;
+
       border-radius: 10px;
-      background: #effaf2;
-      color: #26653a;
-      line-height: 1.7;
-      font-size: 14px;
+
+      display: none;
+
+      z-index: 9999;
+
     }
 
-    @media (max-width: 650px) {
+
+    /* ==============================
+       모바일
+    ============================== */
+
+    @media (
+      max-width: 650px
+    ) {
+
       .container {
-        margin: 24px auto;
+
+        margin:
+          20px auto;
+
       }
 
-      .card,
-      .result-card {
-        padding: 21px;
+
+      .card {
+
+        padding: 20px;
+
       }
 
-      .header h1 {
+
+      h1 {
+
         font-size: 31px;
+
       }
+
 
       .preview-list {
-        grid-template-columns: repeat(2, 1fr);
+
+        grid-template-columns:
+          repeat(2, 1fr);
+
       }
+
+
+      .section-head {
+
+        align-items:
+          flex-start;
+
+      }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <main class="container">
 
-    <header class="header">
-      <div class="magic-icon">🪄</div>
-      <h1>품의뚝딱</h1>
-      <p>장바구니 캡처 한 장으로 품의 준비를 뚝딱!</p>
-    </header>
+<main class="container">
 
 
-    <section class="card">
+  <!-- ==============================
+       상단
+  ============================== -->
 
-      <!-- 제목 -->
+  <header class="header">
 
-      <div class="form-group">
-        <label for="title">
-          품의 제목 <span class="required">*</span>
-        </label>
+    <div class="magic">
+      🪄
+    </div>
 
-        <input
-          id="title"
-          type="text"
-          placeholder="예: 2026. 2학기 수학과 수업 운영 물품 구입"
-        >
-      </div>
+    <h1>
+      품의뚝딱
+    </h1>
 
+    <div class="subtitle">
+      장바구니 캡처 한 장으로 품의 준비를 뚝딱!
+    </div>
 
-      <!-- 관련 문서 -->
+    <div class="version">
+      Gemini AI
+    </div>
 
-      <div class="form-group">
-        <label for="relatedDoc">
-          관련 문서
-        </label>
-
-        <input
-          id="relatedDoc"
-          type="text"
-          placeholder="예: 원봉중학교-1234(2026. 9. 16.)"
-        >
-
-        <div class="helper">
-          관련 문서가 없는 경우 비워두세요.
-        </div>
-      </div>
+  </header>
 
 
-      <!-- 추가 설명 -->
 
-      <div class="form-group">
-        <label for="extraInfo">
-          추가 설명
-        </label>
+  <!-- ==============================
+       입력
+  ============================== -->
 
-        <textarea
-          id="extraInfo"
-          placeholder="예: 학생 체험활동에 사용할 재료이며, 수업 운영 목적에 맞게 작성해 주세요."
-        ></textarea>
-
-        <div class="helper">
-          품의 목적이나 AI가 알아야 할 내용이 있는 경우에만 입력하세요.
-        </div>
-      </div>
+  <section class="card">
 
 
-      <!-- 이미지 -->
+    <div class="group">
 
-      <div class="form-group">
+      <label>
+        품의 제목
+        <span class="required">*</span>
+      </label>
 
-        <label>
-          장바구니 이미지 <span class="required">*</span>
-        </label>
-
-        <div
-          id="uploadZone"
-          class="upload-zone"
-          tabindex="0"
-        >
-
-          <div class="upload-icon">📸</div>
-
-          <div class="upload-main">
-            장바구니 캡처를 올려주세요
-          </div>
-
-          <div class="upload-sub">
-            클릭해서 이미지 파일을 선택하거나<br>
-            화면 캡처 후
-            <span class="shortcut">Ctrl + V</span>
-            로 바로 붙여넣으세요.<br>
-            여러 장도 가능합니다.
-          </div>
-
-        </div>
-
-        <input
-          id="fileInput"
-          type="file"
-          accept="image/*"
-          multiple
-        >
-
-        <div id="previewArea">
-
-          <div class="preview-header">
-            <span class="preview-title">
-              첨부 이미지
-            </span>
-
-            <span
-              id="imageCount"
-              class="image-count"
-            >
-              0장
-            </span>
-          </div>
-
-          <div
-            id="previewList"
-            class="preview-list"
-          ></div>
-
-        </div>
-
-      </div>
-
-
-      <button
-        id="makeButton"
-        class="make-button"
-        type="button"
+      <input
+        id="title"
+        placeholder="예: 2026. 2학기 수학과 수업 운영 물품 구입"
       >
-        🪄 품의 만들기
-      </button>
+
+      <div class="helper">
+        편하게 입력하세요. AI가 품의 기안에 맞는 제목으로 다듬어 줍니다.
+      </div>
+
+    </div>
+
+
+    <div class="group">
+
+      <label>
+        관련 문서
+      </label>
+
+      <input
+        id="relatedDoc"
+        placeholder="예: 원봉중학교-1234(2026. 9. 16.)"
+      >
+
+      <div class="helper">
+        관련 문서가 없는 경우 비워두세요.
+      </div>
+
+    </div>
+
+
+    <div class="group">
+
+      <label>
+        추가 설명
+      </label>
+
+      <textarea
+        id="extraInfo"
+        placeholder="예: 학생 체험활동에 사용할 재료이며, 수업 운영 목적에 맞게 작성해 주세요."
+      ></textarea>
+
+      <div class="helper">
+        품의 목적이나 AI가 알아야 할 내용이 있는 경우에만 입력하세요.
+      </div>
+
+    </div>
+
+
+    <div class="group">
+
+      <label>
+        장바구니 이미지
+        <span class="required">*</span>
+      </label>
 
 
       <div
-        id="message"
-        class="message"
+        id="uploadZone"
+        class="upload-zone"
+        tabindex="0"
+      >
+
+        <div class="upload-icon">
+          📸
+        </div>
+
+        <div class="upload-title">
+          장바구니 캡처를 올려주세요
+        </div>
+
+        <div class="upload-text">
+
+          클릭해서 이미지 파일을 선택하거나<br>
+
+          화면 캡처 후
+          <kbd>Ctrl + V</kbd>
+          로 바로 붙여넣으세요.<br>
+
+          드래그해서 올리거나 여러 장을 넣어도 됩니다.
+
+        </div>
+
+      </div>
+
+
+      <input
+        id="fileInput"
+        type="file"
+        accept="image/*"
+        multiple
+      >
+
+
+      <div id="previewArea">
+
+        <div class="preview-head">
+
+          <span>
+            첨부 이미지
+          </span>
+
+          <span id="imageCount">
+            0장
+          </span>
+
+        </div>
+
+
+        <div
+          id="previewList"
+          class="preview-list"
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    <button
+      id="makeButton"
+      class="make"
+      type="button"
+    >
+      🪄 품의 만들기
+    </button>
+
+
+    <div id="message"></div>
+
+
+  </section>
+
+
+
+  <!-- ==============================
+       결과
+  ============================== -->
+
+  <section
+    id="result"
+    class="card"
+  >
+
+    <h2 class="result-title">
+      🪄 품의 작성 결과
+    </h2>
+
+
+    <div
+      id="summary"
+      class="summary"
+    ></div>
+
+
+
+    <!-- 제목 -->
+
+    <div class="section">
+
+      <div class="section-head">
+
+        <div class="section-title">
+          제목
+        </div>
+
+        <button
+          id="copyTitleButton"
+          class="small-button"
+          type="button"
+        >
+          📋 제목 복사
+        </button>
+
+      </div>
+
+
+      <input
+        id="finalTitle"
+        class="final-title-input"
+      >
+
+
+      <div class="title-note">
+        AI가 품의 기안에 맞게 다듬은 제목입니다. 필요하면 직접 수정할 수 있습니다.
+      </div>
+
+    </div>
+
+
+
+    <!-- 개요 -->
+
+    <div class="section">
+
+      <div class="section-head">
+
+        <div class="section-title">
+          개요
+        </div>
+
+        <button
+          id="copyOverviewButton"
+          class="small-button"
+          type="button"
+        >
+          📋 개요 복사
+        </button>
+
+      </div>
+
+
+      <div
+        id="overviewText"
+        class="result-text overview"
       ></div>
 
-    </section>
+    </div>
 
 
-    <section
-      id="analysisResult"
-      class="result-card"
+
+    <!-- 품목 -->
+
+    <div class="section">
+
+      <div class="section-head">
+
+        <div class="section-title">
+          품목 내역
+        </div>
+
+        <button
+          id="addRowButton"
+          class="small-button"
+          type="button"
+        >
+          ＋ 품목 추가
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                내용
+              </th>
+
+              <th>
+                규격
+              </th>
+
+              <th>
+                단위
+              </th>
+
+              <th>
+                수량
+              </th>
+
+              <th>
+                예상단가
+              </th>
+
+              <th>
+                예상금액
+              </th>
+
+              <th>
+                확인
+              </th>
+
+              <th>
+                삭제
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="itemBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <div class="total-box">
+
+        <span>
+          합계
+        </span>
+
+        <span
+          id="totalMoney"
+          class="total-money"
+        >
+          0원
+        </span>
+
+      </div>
+
+
+      <div class="action-row">
+
+        <button
+          id="excelButton"
+          class="primary-action"
+          type="button"
+        >
+          📥 K-에듀파인 품목내역 Excel 다운로드
+        </button>
+
+      </div>
+
+
+      <div class="helper">
+        최종 수정한 품목을 기준으로 Excel 파일이 생성됩니다.
+      </div>
+
+    </div>
+
+
+    <div
+      id="warningBox"
+      class="warning"
       style="display:none;"
-    ></section>
+    ></div>
 
-  </main>
+
+  </section>
+
+
+</main>
+
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 
 <script>
 
+
+  /* ========================================================
+     요소
+  ======================================================== */
+
+
   const uploadZone =
-    document.getElementById("uploadZone");
+    document.getElementById(
+      "uploadZone"
+    );
+
 
   const fileInput =
-    document.getElementById("fileInput");
+    document.getElementById(
+      "fileInput"
+    );
+
 
   const previewArea =
-    document.getElementById("previewArea");
+    document.getElementById(
+      "previewArea"
+    );
+
 
   const previewList =
-    document.getElementById("previewList");
+    document.getElementById(
+      "previewList"
+    );
+
 
   const imageCount =
-    document.getElementById("imageCount");
+    document.getElementById(
+      "imageCount"
+    );
+
 
   const makeButton =
-    document.getElementById("makeButton");
+    document.getElementById(
+      "makeButton"
+    );
+
 
   const message =
-    document.getElementById("message");
-
-  const analysisResult =
-    document.getElementById("analysisResult");
-
-
-  let selectedImages = [];
+    document.getElementById(
+      "message"
+    );
 
 
-  /*
-   * 이미지 선택
-   */
+  const resultBox =
+    document.getElementById(
+      "result"
+    );
+
+
+  const finalTitle =
+    document.getElementById(
+      "finalTitle"
+    );
+
+
+  const overviewText =
+    document.getElementById(
+      "overviewText"
+    );
+
+
+  const summary =
+    document.getElementById(
+      "summary"
+    );
+
+
+  const itemBody =
+    document.getElementById(
+      "itemBody"
+    );
+
+
+  const totalMoney =
+    document.getElementById(
+      "totalMoney"
+    );
+
+
+  const warningBox =
+    document.getElementById(
+      "warningBox"
+    );
+
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  let selectedImages =
+    [];
+
+
+  let currentPurposeSentence =
+    "";
+
+
+  let currentWarnings =
+    [];
+
+
+  let aiPolishedTitle =
+    "";
+
+
+
+  /* ========================================================
+     이미지 선택
+  ======================================================== */
+
 
   uploadZone.addEventListener(
     "click",
-    () => fileInput.click()
-  );
+    function() {
 
-
-  uploadZone.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter" ||
-        event.key === " "
-      ) {
-        event.preventDefault();
-        fileInput.click();
-      }
+      fileInput.click();
 
     }
   );
@@ -587,25 +1468,97 @@
 
   fileInput.addEventListener(
     "change",
-    event => {
+    function(event) {
 
-      addImages(
-        Array.from(event.target.files)
+      addFiles(
+        Array.from(
+          event.target.files
+        )
       );
 
-      fileInput.value = "";
+
+      fileInput.value =
+        "";
 
     }
   );
 
 
-  /*
-   * 드래그 앤 드롭
-   */
+
+  /* ========================================================
+     Ctrl + V
+  ======================================================== */
+
+
+  document.addEventListener(
+    "paste",
+    function(event) {
+
+      const items =
+        Array.from(
+          event.clipboardData
+            ?.items || []
+        );
+
+
+      const files =
+        [];
+
+
+      items.forEach(
+        function(item) {
+
+          if (
+            item.kind ===
+              "file" &&
+            item.type.startsWith(
+              "image/"
+            )
+          ) {
+
+            const file =
+              item.getAsFile();
+
+
+            if (file) {
+
+              files.push(
+                file
+              );
+
+            }
+
+          }
+
+        }
+      );
+
+
+      if (
+        files.length > 0
+      ) {
+
+        event.preventDefault();
+
+        addFiles(
+          files
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /* ========================================================
+     드래그 앤 드롭
+  ======================================================== */
+
 
   uploadZone.addEventListener(
     "dragover",
-    event => {
+    function(event) {
 
       event.preventDefault();
 
@@ -619,7 +1572,7 @@
 
   uploadZone.addEventListener(
     "dragleave",
-    () => {
+    function() {
 
       uploadZone.classList.remove(
         "dragging"
@@ -631,130 +1584,86 @@
 
   uploadZone.addEventListener(
     "drop",
-    event => {
+    function(event) {
 
       event.preventDefault();
+
 
       uploadZone.classList.remove(
         "dragging"
       );
 
-      addImages(
+
+      const files =
         Array.from(
-          event.dataTransfer.files
-        )
-      );
-
-    }
-  );
-
-
-  /*
-   * Ctrl + V 이미지 붙여넣기
-   */
-
-  document.addEventListener(
-    "paste",
-    event => {
-
-      const clipboardItems =
-        Array.from(
-          event.clipboardData?.items || []
+          event.dataTransfer.files || []
         );
 
-      const pastedImages = [];
 
-
-      clipboardItems.forEach(item => {
-
-        if (
-          item.kind === "file" &&
-          item.type.startsWith("image/")
-        ) {
-
-          const file =
-            item.getAsFile();
-
-          if (file) {
-            pastedImages.push(file);
-          }
-
-        }
-
-      });
-
-
-      /*
-       * 이미지가 클립보드에 있으면
-       * 어느 위치에서 Ctrl+V를 눌렀든
-       * 이미지 업로드로 처리
-       */
-
-      if (pastedImages.length > 0) {
-
-        event.preventDefault();
-
-        addImages(pastedImages);
-
-      }
+      addFiles(
+        files
+      );
 
     }
   );
 
 
-  /*
-   * 이미지 추가
-   */
 
-  function addImages(files) {
+  /* ========================================================
+     이미지 추가
+  ======================================================== */
 
-    const imageFiles =
-      files.filter(
+
+  function addFiles(
+    files
+  ) {
+
+    files
+      .filter(
         file =>
-          file.type.startsWith("image/")
+          file.type.startsWith(
+            "image/"
+          )
+      )
+      .forEach(
+        function(file) {
+
+          selectedImages.push({
+
+            file:
+              file,
+
+            url:
+              URL.createObjectURL(
+                file
+              )
+
+          });
+
+        }
       );
 
 
-    if (imageFiles.length === 0) {
-
-      showMessage(
-        "이미지 파일을 확인해 주세요."
-      );
-
-      return;
-
-    }
-
-
-    imageFiles.forEach(file => {
-
-      selectedImages.push({
-        file,
-        previewUrl:
-          URL.createObjectURL(file)
-      });
-
-    });
-
-
-    renderImages();
-
-    hideMessage();
+    renderPreview();
 
   }
 
 
-  /*
-   * 이미지 미리보기
-   */
 
-  function renderImages() {
+  /* ========================================================
+     이미지 미리보기
+  ======================================================== */
 
-    previewList.innerHTML = "";
+
+  function renderPreview() {
+
+    previewList.innerHTML =
+      "";
 
 
     if (
-      selectedImages.length === 0
+      selectedImages.length ===
+      0
     ) {
 
       previewArea.style.display =
@@ -770,61 +1679,93 @@
 
 
     imageCount.textContent =
-      `${selectedImages.length}장`;
+      selectedImages.length +
+      "장";
 
 
     selectedImages.forEach(
-      (image, index) => {
+      function(
+        image,
+        index
+      ) {
 
-        const item =
-          document.createElement("div");
+        const box =
+          document.createElement(
+            "div"
+          );
 
-        item.className =
-          "preview-item";
+
+        box.className =
+          "preview";
 
 
         const img =
-          document.createElement("img");
+          document.createElement(
+            "img"
+          );
+
 
         img.src =
-          image.previewUrl;
-
-        img.alt =
-          `장바구니 이미지 ${index + 1}`;
+          image.url;
 
 
-        const deleteButton =
-          document.createElement("button");
+        const button =
+          document.createElement(
+            "button"
+          );
 
-        deleteButton.className =
-          "delete-button";
 
-        deleteButton.type =
+        button.type =
           "button";
 
-        deleteButton.textContent =
+
+        button.className =
+          "remove-image";
+
+
+        button.textContent =
           "×";
 
-        deleteButton.title =
-          "이미지 삭제";
 
-
-        deleteButton.addEventListener(
+        button.addEventListener(
           "click",
-          event => {
+          function(event) {
 
             event.stopPropagation();
 
-            removeImage(index);
+
+            URL.revokeObjectURL(
+              selectedImages[
+                index
+              ].url
+            );
+
+
+            selectedImages.splice(
+              index,
+              1
+            );
+
+
+            renderPreview();
 
           }
         );
 
 
-        item.appendChild(img);
-        item.appendChild(deleteButton);
+        box.appendChild(
+          img
+        );
 
-        previewList.appendChild(item);
+
+        box.appendChild(
+          button
+        );
+
+
+        previewList.appendChild(
+          box
+        );
 
       }
     );
@@ -832,151 +1773,144 @@
   }
 
 
-  /*
-   * 이미지 삭제
-   */
 
-  function removeImage(index) {
+  /* ========================================================
+     이미지 압축
 
-    URL.revokeObjectURL(
-      selectedImages[index].previewUrl
-    );
-
-    selectedImages.splice(
-      index,
-      1
-    );
-
-    renderImages();
-
-  }
+     Vercel 요청 용량 제한을 고려해
+     브라우저에서 먼저 줄입니다.
+  ======================================================== */
 
 
-  /*
-   * 메시지
-   */
-
-  function showMessage(text) {
-
-    message.textContent =
-      text;
-
-    message.style.display =
-      "block";
-
-  }
-
-
-  function hideMessage() {
-
-    message.style.display =
-      "none";
-
-  }
-
-
-  /*
-   * 이미지 압축
-   */
-
-  function compressImage(file) {
+  function compressImage(
+    file,
+    maxWidth = 1400,
+    maxHeight = 2000,
+    quality = 0.74
+  ) {
 
     return new Promise(
-      (resolve, reject) => {
+      function(
+        resolve,
+        reject
+      ) {
 
         const reader =
           new FileReader();
 
 
-        reader.onload = event => {
+        reader.onload =
+          function(event) {
 
-          const img =
-            new Image();
-
-
-          img.onload = () => {
-
-            const maxWidth = 1600;
-            const maxHeight = 2400;
-
-            let width =
-              img.width;
-
-            let height =
-              img.height;
+            const img =
+              new Image();
 
 
-            const ratio =
-              Math.min(
-                maxWidth / width,
-                maxHeight / height,
-                1
-              );
+            img.onload =
+              function() {
+
+                const ratio =
+                  Math.min(
+
+                    maxWidth /
+                      img.width,
+
+                    maxHeight /
+                      img.height,
+
+                    1
+
+                  );
 
 
-            width =
-              Math.round(
-                width * ratio
-              );
-
-            height =
-              Math.round(
-                height * ratio
-              );
+                const width =
+                  Math.round(
+                    img.width *
+                    ratio
+                  );
 
 
-            const canvas =
-              document.createElement(
-                "canvas"
-              );
-
-            canvas.width =
-              width;
-
-            canvas.height =
-              height;
+                const height =
+                  Math.round(
+                    img.height *
+                    ratio
+                  );
 
 
-            const context =
-              canvas.getContext("2d");
+                const canvas =
+                  document.createElement(
+                    "canvas"
+                  );
 
 
-            context.drawImage(
-              img,
-              0,
-              0,
-              width,
-              height
-            );
+                canvas.width =
+                  width;
 
 
-            const dataUrl =
-              canvas.toDataURL(
-                "image/jpeg",
-                0.82
-              );
+                canvas.height =
+                  height;
 
 
-            resolve(dataUrl);
+                const context =
+                  canvas.getContext(
+                    "2d"
+                  );
+
+
+                context.drawImage(
+                  img,
+                  0,
+                  0,
+                  width,
+                  height
+                );
+
+
+                resolve(
+
+                  canvas.toDataURL(
+                    "image/jpeg",
+                    quality
+                  )
+
+                );
+
+              };
+
+
+            img.onerror =
+              function() {
+
+                reject(
+                  new Error(
+                    "이미지를 읽지 못했습니다."
+                  )
+                );
+
+              };
+
+
+            img.src =
+              event.target.result;
 
           };
 
 
-          img.onerror =
-            reject;
-
-
-          img.src =
-            event.target.result;
-
-        };
-
-
         reader.onerror =
-          reject;
+          function() {
+
+            reject(
+              new Error(
+                "이미지 파일을 읽지 못했습니다."
+              )
+            );
+
+          };
 
 
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(
+          file
+        );
 
       }
     );
@@ -984,96 +1918,1038 @@
   }
 
 
-  /*
-   * 금액 표시
-   */
 
-  function formatMoney(value) {
+  /* ========================================================
+     API 전송용 이미지 준비
+  ======================================================== */
 
-    const number =
-      Number(value);
+
+  async function prepareImages(
+    baseData
+  ) {
+
+    /*
+     * 1차 압축
+     */
+
+    let images =
+      await Promise.all(
+
+        selectedImages.map(
+          image =>
+            compressImage(
+              image.file,
+              1400,
+              2000,
+              .74
+            )
+        )
+
+      );
+
+
+    let testPayload = {
+
+      ...baseData,
+
+      images:
+        images
+
+    };
+
+
+    let payloadSize =
+      new Blob([
+        JSON.stringify(
+          testPayload
+        )
+      ]).size;
+
+
+    /*
+     * 요청 크기가 크면
+     * 한 번 더 압축
+     */
 
     if (
-      !Number.isFinite(number)
+      payloadSize >
+      4000000
     ) {
-      return "-";
+
+      showMessage(
+        "이미지가 많아 용량을 한 번 더 줄이고 있습니다."
+      );
+
+
+      images =
+        await Promise.all(
+
+          selectedImages.map(
+            image =>
+              compressImage(
+                image.file,
+                1000,
+                1600,
+                .60
+              )
+          )
+
+        );
+
+
+      testPayload = {
+
+        ...baseData,
+
+        images:
+          images
+
+      };
+
+
+      payloadSize =
+        new Blob([
+          JSON.stringify(
+            testPayload
+          )
+        ]).size;
+
     }
 
-    return (
-      number.toLocaleString("ko-KR")
-      + "원"
+
+    /*
+     * 그래도 너무 크면 중단
+     */
+
+    if (
+      payloadSize >
+      4200000
+    ) {
+
+      throw new Error(
+        "첨부 이미지 용량이 너무 큽니다. 이미지 수를 조금 줄여서 다시 시도해 주세요."
+      );
+
+    }
+
+
+    return images;
+
+  }
+
+
+
+  /* ========================================================
+     품의 만들기
+  ======================================================== */
+
+
+  makeButton.addEventListener(
+    "click",
+    async function() {
+
+      const title =
+        getOriginalTitle();
+
+
+      const relatedDoc =
+        getRelatedDoc();
+
+
+      const extraInfo =
+        document
+          .getElementById(
+            "extraInfo"
+          )
+          .value
+          .trim();
+
+
+      if (!title) {
+
+        showMessage(
+          "품의 제목을 입력해 주세요."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        selectedImages.length ===
+        0
+      ) {
+
+        showMessage(
+          "장바구니 이미지를 올려주세요."
+        );
+
+        return;
+
+      }
+
+
+      makeButton.disabled =
+        true;
+
+
+      makeButton.textContent =
+        "🪄 품의 작성 중...";
+
+
+      showMessage(
+        "제목을 다듬고 상품명, 옵션, 수량, 단가, 배송비를 분석하고 있습니다."
+      );
+
+
+      resultBox.style.display =
+        "none";
+
+
+      try {
+
+        const baseData = {
+
+          title:
+            title,
+
+          relatedDoc:
+            relatedDoc,
+
+          extraInfo:
+            extraInfo
+
+        };
+
+
+        const images =
+          await prepareImages(
+            baseData
+          );
+
+
+        const payload = {
+
+          ...baseData,
+
+          images:
+            images
+
+        };
+
+
+        /* =============================================
+           Vercel API 호출
+        ============================================= */
+
+        const response =
+          await fetch(
+            "/api/analyze",
+            {
+
+              method:
+                "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json"
+
+              },
+
+              body:
+                JSON.stringify(
+                  payload
+                )
+
+            }
+          );
+
+
+        let responseData;
+
+
+        try {
+
+          responseData =
+            await response.json();
+
+        } catch (error) {
+
+          throw new Error(
+            "서버 응답을 읽지 못했습니다."
+          );
+
+        }
+
+
+        if (
+          !response.ok ||
+          !responseData.success
+        ) {
+
+          throw new Error(
+
+            responseData.error ||
+            "분석에 실패했습니다."
+
+          );
+
+        }
+
+
+        handleResult(
+          responseData
+        );
+
+
+      } catch (error) {
+
+        resetButton();
+
+
+        showMessage(
+
+          "❌ " +
+          (
+            error.message ||
+            String(error)
+          )
+
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /* ========================================================
+     Gemini 분석 결과
+  ======================================================== */
+
+
+  function handleResult(
+    response
+  ) {
+
+    resetButton();
+
+
+    hideMessage();
+
+
+    const data =
+      response.data || {};
+
+
+    currentWarnings =
+      Array.isArray(
+        data.warnings
+      )
+        ? data.warnings
+        : [];
+
+
+    /*
+     * AI가 정리한 제목
+     */
+
+    aiPolishedTitle =
+      cleanTitle(
+
+        data.polished_title ||
+        getOriginalTitle()
+
+      );
+
+
+    finalTitle.value =
+      aiPolishedTitle;
+
+
+    /*
+     * AI 개요 첫 문장
+     */
+
+    currentPurposeSentence =
+      normalizePurposeSentence(
+
+        data.purpose_sentence,
+
+        aiPolishedTitle
+
+      );
+
+
+    renderResult(
+      data
     );
 
   }
 
 
-  /*
-   * 안전하게 셀 만들기
-   */
 
-  function createCell(
+  /* ========================================================
+     결과 그리기
+  ======================================================== */
+
+
+  function renderResult(
+    data
+  ) {
+
+    resultBox.style.display =
+      "block";
+
+
+    itemBody.innerHTML =
+      "";
+
+
+    const items =
+      Array.isArray(
+        data.items
+      )
+        ? data.items
+        : [];
+
+
+    items.forEach(
+      function(item) {
+
+        addItemRow(
+          item
+        );
+
+      }
+    );
+
+
+    renderWarnings();
+
+
+    updateAllResults();
+
+
+    resultBox.scrollIntoView({
+
+      behavior:
+        "smooth",
+
+      block:
+        "start"
+
+    });
+
+  }
+
+
+
+  /* ========================================================
+     제목 직접 수정
+  ======================================================== */
+
+
+  finalTitle.addEventListener(
+    "input",
+    function() {
+
+      const title =
+        finalTitle
+          .value
+          .trim();
+
+
+      if (
+        title !==
+        aiPolishedTitle
+      ) {
+
+        currentPurposeSentence =
+          fallbackPurposeSentence(
+            title
+          );
+
+      }
+
+
+      updateAllResults();
+
+    }
+  );
+
+
+
+  /* ========================================================
+     품목 행 생성
+  ======================================================== */
+
+
+  function addItemRow(
+    item
+  ) {
+
+    const tr =
+      document.createElement(
+        "tr"
+      );
+
+
+    const itemType =
+      item.item_type ||
+      "product";
+
+
+    tr.dataset.itemType =
+      itemType;
+
+
+    tr.dataset.confidence =
+      item.confidence ||
+      "medium";
+
+
+    tr.dataset.note =
+      item.note ||
+      "";
+
+
+    if (
+      itemType ===
+      "shipping"
+    ) {
+
+      tr.classList.add(
+        "shipping"
+      );
+
+    }
+
+
+    /*
+     * 내용
+     */
+
+    tr.appendChild(
+
+      createInputCell(
+
+        "name",
+
+        item.product_name ||
+          "",
+
+        "text",
+
+        "name-input"
+
+      )
+
+    );
+
+
+    /*
+     * 규격
+     */
+
+    tr.appendChild(
+
+      createInputCell(
+
+        "spec",
+
+        item.specification ||
+          "",
+
+        "text",
+
+        "spec-input"
+
+      )
+
+    );
+
+
+    /*
+     * 단위
+     */
+
+    tr.appendChild(
+
+      createInputCell(
+
+        "unit",
+
+        item.unit ||
+          "",
+
+        "text",
+
+        "unit-input"
+
+      )
+
+    );
+
+
+    /*
+     * 수량
+     */
+
+    tr.appendChild(
+
+      createInputCell(
+
+        "qty",
+
+        item.quantity ??
+          1,
+
+        "number",
+
+        "number-input"
+
+      )
+
+    );
+
+
+    /*
+     * 예상단가
+     */
+
+    tr.appendChild(
+
+      createInputCell(
+
+        "price",
+
+        item.unit_price ??
+          0,
+
+        "number",
+
+        "number-input"
+
+      )
+
+    );
+
+
+    /*
+     * 예상금액
+     */
+
+    const amountTd =
+      document.createElement(
+        "td"
+      );
+
+
+    amountTd.className =
+      "amount-cell";
+
+
+    amountTd.dataset.role =
+      "amount";
+
+
+    tr.appendChild(
+      amountTd
+    );
+
+
+    /*
+     * 확인상태
+     */
+
+    const statusTd =
+      document.createElement(
+        "td"
+      );
+
+
+    statusTd.textContent =
+      confidenceIcon(
+        item.confidence
+      );
+
+
+    statusTd.title =
+      item.note ||
+      "";
+
+
+    tr.appendChild(
+      statusTd
+    );
+
+
+    /*
+     * 삭제
+     */
+
+    const deleteTd =
+      document.createElement(
+        "td"
+      );
+
+
+    const deleteButton =
+      document.createElement(
+        "button"
+      );
+
+
+    deleteButton.type =
+      "button";
+
+
+    deleteButton.className =
+      "delete-row";
+
+
+    deleteButton.textContent =
+      "삭제";
+
+
+    deleteButton.addEventListener(
+      "click",
+      function() {
+
+        tr.remove();
+
+        updateAllResults();
+
+      }
+    );
+
+
+    deleteTd.appendChild(
+      deleteButton
+    );
+
+
+    tr.appendChild(
+      deleteTd
+    );
+
+
+    /*
+     * 값 변경 시 자동계산
+     */
+
+    tr
+      .querySelectorAll(
+        "input"
+      )
+      .forEach(
+        function(input) {
+
+          input.addEventListener(
+            "input",
+            updateAllResults
+          );
+
+        }
+      );
+
+
+    itemBody.appendChild(
+      tr
+    );
+
+
+    updateRowAmount(
+      tr
+    );
+
+  }
+
+
+
+  /* ========================================================
+     입력 셀
+  ======================================================== */
+
+
+  function createInputCell(
+    role,
     value,
-    className = ""
+    type,
+    className
   ) {
 
     const td =
-      document.createElement("td");
+      document.createElement(
+        "td"
+      );
 
-    td.textContent =
-      value ?? "";
 
-    if (className) {
-      td.className =
-        className;
+    const input =
+      document.createElement(
+        "input"
+      );
+
+
+    input.dataset.role =
+      role;
+
+
+    input.type =
+      type;
+
+
+    input.value =
+      value;
+
+
+    if (
+      type ===
+      "number"
+    ) {
+
+      input.min =
+        "0";
+
+
+      input.step =
+        "1";
+
     }
+
+
+    input.className =
+      className;
+
+
+    td.appendChild(
+      input
+    );
+
 
     return td;
 
   }
 
 
-  /*
-   * 결과 화면
-   */
 
-  function showAnalysisResult(result) {
-
-    analysisResult.innerHTML = "";
-
-    analysisResult.style.display =
-      "block";
+  /* ========================================================
+     품목 추가
+  ======================================================== */
 
 
-    const items =
-      Array.isArray(result.items)
-        ? result.items
-        : [];
+  document
+    .getElementById(
+      "addRowButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        addItemRow({
+
+          product_name:
+            "",
+
+          specification:
+            "",
+
+          unit:
+            "개",
+
+          quantity:
+            1,
+
+          unit_price:
+            0,
+
+          amount:
+            0,
+
+          item_type:
+            "product",
+
+          confidence:
+            "medium",
+
+          note:
+            "사용자가 직접 추가한 항목"
+
+        });
 
 
-    const warnings =
-      Array.isArray(result.warnings)
-        ? result.warnings
-        : [];
+        updateAllResults();
 
-
-    /*
-     * 제목
-     */
-
-    const heading =
-      document.createElement("h2");
-
-    heading.textContent =
-      "🪄 장바구니 분석 결과";
-
-    analysisResult.appendChild(
-      heading
+      }
     );
 
 
-    /*
-     * 요약
-     */
+
+  /* ========================================================
+     현재 품목 읽기
+  ======================================================== */
+
+
+  function getCurrentItems() {
+
+    return Array
+      .from(
+
+        itemBody
+          .querySelectorAll(
+            "tr"
+          )
+
+      )
+      .map(
+        function(tr) {
+
+          const quantity =
+            numberOf(
+              tr,
+              "qty"
+            );
+
+
+          const unitPrice =
+            numberOf(
+              tr,
+              "price"
+            );
+
+
+          return {
+
+            product_name:
+              valueOf(
+                tr,
+                "name"
+              ),
+
+            specification:
+              valueOf(
+                tr,
+                "spec"
+              ),
+
+            unit:
+              valueOf(
+                tr,
+                "unit"
+              ),
+
+            quantity:
+              quantity,
+
+            unit_price:
+              unitPrice,
+
+            amount:
+              quantity *
+              unitPrice,
+
+            item_type:
+              tr.dataset.itemType ||
+              "product"
+
+          };
+
+        }
+      );
+
+  }
+
+
+
+  function valueOf(
+    row,
+    role
+  ) {
+
+    return row
+      .querySelector(
+        `[data-role="${role}"]`
+      )
+      ?.value
+      ?.trim() || "";
+
+  }
+
+
+
+  function numberOf(
+    row,
+    role
+  ) {
+
+    const value =
+      Number(
+
+        row
+          .querySelector(
+            `[data-role="${role}"]`
+          )
+          ?.value
+
+      );
+
+
+    return Number.isFinite(
+      value
+    )
+      ? value
+      : 0;
+
+  }
+
+
+
+  /* ========================================================
+     전체 결과 갱신
+  ======================================================== */
+
+
+  function updateAllResults() {
+
+    itemBody
+      .querySelectorAll(
+        "tr"
+      )
+      .forEach(
+        updateRowAmount
+      );
+
+
+    const items =
+      getCurrentItems();
+
+
+    const total =
+      items.reduce(
+        function(
+          sum,
+          item
+        ) {
+
+          return (
+            sum +
+            item.amount
+          );
+
+        },
+        0
+      );
+
+
+    totalMoney.textContent =
+      formatMoney(
+        total
+      );
+
 
     const productCount =
       items.filter(
@@ -1091,512 +2967,1197 @@
       ).length;
 
 
-    const summary =
-      document.createElement("div");
-
-    summary.className =
-      "analysis-summary";
-
     summary.textContent =
-      `상품 ${productCount}개 · 배송비 ${shippingCount}건 · 확인 필요 ${warnings.length}건`;
 
-    analysisResult.appendChild(
-      summary
-    );
-
-
-    /*
-     * 개요 첫 문장
-     */
-
-    const sentenceSection =
-      document.createElement("div");
-
-    sentenceSection.className =
-      "result-section";
-
-
-    const sentenceTitle =
-      document.createElement("div");
-
-    sentenceTitle.className =
-      "result-section-title";
-
-    sentenceTitle.textContent =
-      "개요 문장";
-
-
-    const sentence =
-      document.createElement("div");
-
-    sentence.className =
-      "purpose-sentence";
-
-    sentence.textContent =
-      result.purpose_sentence ||
-      "개요 문장을 생성하지 못했습니다.";
-
-
-    sentenceSection.appendChild(
-      sentenceTitle
-    );
-
-    sentenceSection.appendChild(
-      sentence
-    );
-
-    analysisResult.appendChild(
-      sentenceSection
-    );
-
-
-    /*
-     * 품목표
-     */
-
-    const tableSection =
-      document.createElement("div");
-
-    tableSection.className =
-      "result-section";
-
-
-    const tableTitle =
-      document.createElement("div");
-
-    tableTitle.className =
-      "result-section-title";
-
-    tableTitle.textContent =
-      "품목 내역";
-
-
-    const tableWrap =
-      document.createElement("div");
-
-    tableWrap.className =
-      "table-wrap";
-
-
-    const table =
-      document.createElement("table");
-
-    table.className =
-      "result-table";
-
-
-    const thead =
-      document.createElement("thead");
-
-
-    const headerRow =
-      document.createElement("tr");
-
-
-    [
-      "품명",
-      "규격",
-      "수량",
-      "단위",
-      "단가",
-      "금액",
-      "확인"
-    ].forEach(text => {
-
-      const th =
-        document.createElement("th");
-
-      th.textContent =
-        text;
-
-      headerRow.appendChild(th);
-
-    });
-
-
-    thead.appendChild(
-      headerRow
-    );
-
-
-    const tbody =
-      document.createElement("tbody");
-
-
-    items.forEach(item => {
-
-      const row =
-        document.createElement("tr");
-
-
-      if (
-        item.item_type ===
-        "shipping"
-      ) {
-        row.classList.add(
-          "shipping-row"
-        );
-      }
-
-
-      let status = "✅";
-
-      if (
-        item.confidence ===
-        "medium"
-      ) {
-        status = "⚠️";
-      }
-
-      if (
-        item.confidence ===
-        "low"
-      ) {
-        status = "❗";
-      }
-
-
-      const productName =
-        item.item_type ===
-        "shipping"
-          ? `${item.product_name} 🚚`
-          : item.product_name;
-
-
-      row.appendChild(
-        createCell(
-          productName
-        )
-      );
-
-      row.appendChild(
-        createCell(
-          item.specification
-        )
-      );
-
-      row.appendChild(
-        createCell(
-          item.quantity
-        )
-      );
-
-      row.appendChild(
-        createCell(
-          item.unit
-        )
-      );
-
-      row.appendChild(
-        createCell(
-          formatMoney(
-            item.unit_price
-          )
-        )
-      );
-
-      row.appendChild(
-        createCell(
-          formatMoney(
-            item.amount
-          )
-        )
+      "상품 " +
+      productCount +
+      "개 · 배송비 " +
+      shippingCount +
+      "건 · 총 " +
+      items.length +
+      "개 품목 · 합계 " +
+      formatMoney(
+        total
       );
 
 
-      const statusCell =
-        createCell(status);
-
-      if (item.note) {
-        statusCell.title =
-          item.note;
-      }
-
-      row.appendChild(
-        statusCell
+    overviewText.textContent =
+      buildOverview(
+        items,
+        total
       );
-
-
-      tbody.appendChild(row);
-
-    });
-
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-
-    tableWrap.appendChild(table);
-
-    tableSection.appendChild(
-      tableTitle
-    );
-
-    tableSection.appendChild(
-      tableWrap
-    );
-
-    analysisResult.appendChild(
-      tableSection
-    );
-
-
-    /*
-     * 경고
-     */
-
-    if (warnings.length > 0) {
-
-      const warningBox =
-        document.createElement("div");
-
-      warningBox.className =
-        "warning-box";
-
-
-      const warningTitle =
-        document.createElement("strong");
-
-      warningTitle.textContent =
-        "⚠️ 확인이 필요한 내용";
-
-
-      warningBox.appendChild(
-        warningTitle
-      );
-
-
-      warnings.forEach(warning => {
-
-        const line =
-          document.createElement("div");
-
-        line.textContent =
-          `• ${warning}`;
-
-        warningBox.appendChild(line);
-
-      });
-
-
-      analysisResult.appendChild(
-        warningBox
-      );
-
-    } else {
-
-      const success =
-        document.createElement("div");
-
-      success.className =
-        "success-box";
-
-      success.textContent =
-        "✅ AI가 별도의 확인 필요 항목을 발견하지 않았습니다. 그래도 품목과 금액은 최종 확인해 주세요.";
-
-      analysisResult.appendChild(
-        success
-      );
-
-    }
-
-
-    analysisResult.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
 
   }
 
 
-  /*
-   * 품의 만들기
-   */
 
-  makeButton.addEventListener(
-    "click",
-    async () => {
-
-      const title =
-        document
-          .getElementById("title")
-          .value
-          .trim();
+  /* ========================================================
+     행 예상금액
+  ======================================================== */
 
 
-      const relatedDoc =
-        document
-          .getElementById(
-            "relatedDoc"
-          )
-          .value
-          .trim();
+  function updateRowAmount(
+    row
+  ) {
+
+    const quantity =
+      numberOf(
+        row,
+        "qty"
+      );
 
 
-      const extraInfo =
-        document
-          .getElementById(
-            "extraInfo"
-          )
-          .value
-          .trim();
+    const unitPrice =
+      numberOf(
+        row,
+        "price"
+      );
 
 
-      /*
-       * 입력 확인
-       */
+    const amount =
+      quantity *
+      unitPrice;
 
-      if (!title) {
 
-        showMessage(
-          "품의 제목을 입력해 주세요."
+    const cell =
+      row.querySelector(
+        '[data-role="amount"]'
+      );
+
+
+    if (cell) {
+
+      cell.textContent =
+        formatMoney(
+          amount
         );
 
-        document
-          .getElementById("title")
-          .focus();
+    }
 
-        return;
+  }
 
-      }
+
+
+  /* ========================================================
+     품의 개요 생성
+
+     빈 줄 없음
+
+     관련 있음:
+     1. 관련:
+     2. 본문
+       가. 물품:
+       나. 금액: ...).  끝.
+
+     관련 없음:
+     본문
+       1. 물품:
+       2. 금액: ...).  끝.
+  ======================================================== */
+
+
+  function buildOverview(
+    items,
+    total
+  ) {
+
+    const relatedDoc =
+      normalizeRelatedDoc(
+        getRelatedDoc()
+      );
+
+
+    const itemSummary =
+      buildItemSummary(
+        items
+      );
+
+
+    const amountText =
+
+      "금" +
+
+      Number(total)
+        .toLocaleString(
+          "ko-KR"
+        ) +
+
+      "원(금" +
+
+      numberToKoreanFormal(
+        total
+      ) +
+
+      "원)";
+
+
+    const purposeSentence =
+      getPurposeSentence();
+
+
+    /*
+     * 관련 문서 있음
+     */
+
+    if (relatedDoc) {
+
+      return (
+
+        "1. 관련: " +
+        relatedDoc +
+        "\n" +
+
+        "2. " +
+        purposeSentence +
+        "\n" +
+
+        "  가. 물품: " +
+        itemSummary +
+        "\n" +
+
+        "  나. 금액: " +
+        amountText +
+        ".  끝."
+
+      );
+
+    }
+
+
+    /*
+     * 관련 문서 없음
+     */
+
+    return (
+
+      purposeSentence +
+      "\n" +
+
+      "  1. 물품: " +
+      itemSummary +
+      "\n" +
+
+      "  2. 금액: " +
+      amountText +
+      ".  끝."
+
+    );
+
+  }
+
+
+
+  /* ========================================================
+     관련 문서 날짜 정리
+
+     2026.5.5.
+       ↓
+     2026. 5. 5.
+  ======================================================== */
+
+
+  function normalizeRelatedDoc(
+    text
+  ) {
+
+    let value =
+      String(
+        text || ""
+      ).trim();
+
+
+    if (!value) {
+
+      return "";
+
+    }
+
+
+    value =
+      value.replace(
+
+        /\((\d{4})\s*\.\s*0?(\d{1,2})\s*\.\s*0?(\d{1,2})\s*\.?\s*\)/g,
+
+        function(
+          match,
+          year,
+          month,
+          day
+        ) {
+
+          return (
+
+            "(" +
+            Number(year) +
+            ". " +
+            Number(month) +
+            ". " +
+            Number(day) +
+            ".)"
+
+          );
+
+        }
+
+      );
+
+
+    return value;
+
+  }
+
+
+
+  /* ========================================================
+     개요 첫 문장
+  ======================================================== */
+
+
+  function getPurposeSentence() {
+
+    const title =
+      finalTitle
+        .value
+        .trim();
+
+
+    /*
+     * AI 결과 제목을 사용자가 바꾸었으면
+     * 수정 제목으로 개요도 재작성
+     */
+
+    if (
+      title !==
+      aiPolishedTitle
+    ) {
+
+      return fallbackPurposeSentence(
+        title
+      );
+
+    }
+
+
+    return normalizePurposeSentence(
+
+      currentPurposeSentence,
+
+      title
+
+    );
+
+  }
+
+
+
+  function normalizePurposeSentence(
+    sentence,
+    title
+  ) {
+
+    let text =
+      String(
+        sentence || ""
+      ).trim();
+
+
+    const invalid =
+      !text ||
+      /○○|ㅇㅇ|OOO|XXX|△△/.test(
+        text
+      );
+
+
+    if (invalid) {
+
+      return fallbackPurposeSentence(
+        title
+      );
+
+    }
+
+
+    text =
+      text.replace(
+        /[。.!]+$/,
+        ""
+      );
+
+
+    return (
+      text +
+      "."
+    );
+
+  }
+
+
+
+  /* ========================================================
+     제목 직접수정 시 개요 문장 생성
+  ======================================================== */
+
+
+  function fallbackPurposeSentence(
+    title
+  ) {
+
+    const text =
+      cleanTitle(
+        title
+      );
+
+
+    if (!text) {
+
+      return (
+        "필요한 물품을 아래와 같이 구입하고자 합니다."
+      );
+
+    }
+
+
+    /*
+     * 물품 구입 / 물품 구매
+     */
+
+    if (
+      /물품\s*(구입|구매)$/.test(
+        text
+      )
+    ) {
+
+      const base =
+        text
+          .replace(
+            /\s*물품\s*(구입|구매)$/,
+            ""
+          )
+          .trim();
+
+
+      return (
+
+        base +
+        "에 필요한 물품을 아래와 같이 구입하고자 합니다."
+
+      );
+
+    }
+
+
+    /*
+     * 일반 구입 / 구매
+     */
+
+    if (
+      /(구입|구매)$/.test(
+        text
+      )
+    ) {
+
+      const base =
+        text
+          .replace(
+            /\s*(구입|구매)$/,
+            ""
+          )
+          .trim();
+
+
+      return (
+
+        base +
+        "에 필요한 물품을 아래와 같이 구입하고자 합니다."
+
+      );
+
+    }
+
+
+    /*
+     * 지출
+     */
+
+    if (
+      /지출$/.test(
+        text
+      )
+    ) {
+
+      const base =
+        text
+          .replace(
+            /\s*지출$/,
+            ""
+          )
+          .trim();
+
+
+      return (
+
+        base +
+        "를 아래와 같이 지출하고자 합니다."
+
+      );
+
+    }
+
+
+    return (
+
+      text +
+      "과 관련하여 필요한 물품을 아래와 같이 구입하고자 합니다."
+
+    );
+
+  }
+
+
+
+  function cleanTitle(
+    title
+  ) {
+
+    return String(
+      title || ""
+    )
+      .trim()
+      .replace(
+        /[。.!]+$/,
+        ""
+      );
+
+  }
+
+
+
+  /* ========================================================
+     개요 물품 요약
+  ======================================================== */
+
+
+  function buildItemSummary(
+    items
+  ) {
+
+    const productNames =
+      items
+        .filter(
+          item =>
+            item.item_type !==
+              "shipping" &&
+            item.product_name
+        )
+        .map(
+          item =>
+            item.product_name
+              .trim()
+        );
+
+
+    const uniqueNames =
+      [
+        ...new Set(
+          productNames
+        )
+      ];
+
+
+    if (
+      uniqueNames.length ===
+      0
+    ) {
+
+      return "구입 물품";
+
+    }
+
+
+    if (
+      uniqueNames.length ===
+      1
+    ) {
+
+      return uniqueNames[0];
+
+    }
+
+
+    return (
+
+      uniqueNames[0] +
+      " 외 " +
+      (
+        uniqueNames.length -
+        1
+      ) +
+      "종"
+
+    );
+
+  }
+
+
+
+  /* ========================================================
+     숫자 → 한글 금액
+
+     94530
+       ↓
+     구만사천오백삼십
+  ======================================================== */
+
+
+  function numberToKoreanFormal(
+    value
+  ) {
+
+    let number =
+      Math.floor(
+        Number(value)
+      );
+
+
+    if (
+      !Number.isFinite(
+        number
+      ) ||
+      number < 0
+    ) {
+
+      return "";
+
+    }
+
+
+    if (
+      number === 0
+    ) {
+
+      return "영";
+
+    }
+
+
+    const digits = [
+
+      "",
+      "일",
+      "이",
+      "삼",
+      "사",
+      "오",
+      "육",
+      "칠",
+      "팔",
+      "구"
+
+    ];
+
+
+    const smallUnits = [
+
+      "",
+      "십",
+      "백",
+      "천"
+
+    ];
+
+
+    const bigUnits = [
+
+      "",
+      "만",
+      "억",
+      "조",
+      "경"
+
+    ];
+
+
+    let result =
+      "";
+
+
+    let groupIndex =
+      0;
+
+
+    while (
+      number > 0
+    ) {
+
+      const group =
+        number %
+        10000;
 
 
       if (
-        selectedImages.length === 0
+        group > 0
       ) {
 
-        showMessage(
-          "장바구니 이미지를 붙여넣거나 업로드해 주세요."
-        );
-
-        uploadZone.focus();
-
-        return;
-
-      }
+        let groupText =
+          "";
 
 
-      try {
-
-        makeButton.disabled =
-          true;
-
-        makeButton.textContent =
-          "🪄 장바구니 분석 중...";
+        let temp =
+          group;
 
 
-        showMessage(
-          "AI가 상품명, 옵션, 수량, 가격과 배송비를 확인하고 있습니다. 잠시만 기다려 주세요."
-        );
+        for (
+          let i = 0;
+          i < 4;
+          i++
+        ) {
+
+          const digit =
+            temp % 10;
 
 
-        analysisResult.style.display =
-          "none";
+          if (
+            digit > 0
+          ) {
+
+            groupText =
+
+              digits[
+                digit
+              ] +
+
+              smallUnits[
+                i
+              ] +
+
+              groupText;
+
+          }
 
 
-        /*
-         * 이미지 압축
-         */
-
-        const images =
-          await Promise.all(
-
-            selectedImages.map(
-              image =>
-                compressImage(
-                  image.file
-                )
-            )
-
-          );
-
-
-        /*
-         * API 요청
-         */
-
-        const response =
-          await fetch(
-            "/api/analyze",
-            {
-
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json"
-              },
-
-              body:
-                JSON.stringify({
-                  title,
-                  relatedDoc,
-                  extraInfo,
-                  images
-                })
-
-            }
-          );
-
-
-        let result;
-
-
-        try {
-
-          result =
-            await response.json();
-
-        } catch {
-
-          throw new Error(
-            "서버 응답을 읽지 못했습니다."
-          );
+          temp =
+            Math.floor(
+              temp / 10
+            );
 
         }
 
 
-        if (!response.ok) {
+        result =
 
-          throw new Error(
-            result.error ||
-            "장바구니 분석에 실패했습니다."
-          );
+          groupText +
 
-        }
+          bigUnits[
+            groupIndex
+          ] +
 
-
-        hideMessage();
-
-        showAnalysisResult(
-          result
-        );
-
-
-      } catch (error) {
-
-        console.error(error);
-
-
-        showMessage(
-          "❌ 오류가 발생했습니다: "
-          + error.message
-        );
-
-
-      } finally {
-
-        makeButton.disabled =
-          false;
-
-        makeButton.textContent =
-          "🪄 품의 만들기";
+          result;
 
       }
+
+
+      number =
+        Math.floor(
+          number /
+          10000
+        );
+
+
+      groupIndex++;
 
     }
-  );
+
+
+    return result;
+
+  }
+
+
+
+  /* ========================================================
+     제목 복사
+  ======================================================== */
+
+
+  document
+    .getElementById(
+      "copyTitleButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        copyText(
+
+          finalTitle
+            .value
+            .trim(),
+
+          "제목을 복사했습니다."
+
+        );
+
+      }
+    );
+
+
+
+  /* ========================================================
+     개요 복사
+  ======================================================== */
+
+
+  document
+    .getElementById(
+      "copyOverviewButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        copyText(
+
+          overviewText.textContent,
+
+          "개요를 복사했습니다."
+
+        );
+
+      }
+    );
+
+
+
+  async function copyText(
+    text,
+    successMessage
+  ) {
+
+    try {
+
+      await navigator
+        .clipboard
+        .writeText(
+          text
+        );
+
+
+      showToast(
+        successMessage
+      );
+
+
+    } catch (error) {
+
+      const textarea =
+        document.createElement(
+          "textarea"
+        );
+
+
+      textarea.value =
+        text;
+
+
+      document.body.appendChild(
+        textarea
+      );
+
+
+      textarea.select();
+
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      textarea.remove();
+
+
+      showToast(
+        successMessage
+      );
+
+    }
+
+  }
+
+
+
+  /* ========================================================
+     Excel 다운로드
+  ======================================================== */
+
+
+  document
+    .getElementById(
+      "excelButton"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        const items =
+          getCurrentItems();
+
+
+        if (
+          items.length ===
+          0
+        ) {
+
+          showToast(
+            "다운로드할 품목이 없습니다."
+          );
+
+          return;
+
+        }
+
+
+        if (
+          typeof XLSX ===
+          "undefined"
+        ) {
+
+          showToast(
+            "Excel 기능을 불러오지 못했습니다."
+          );
+
+          return;
+
+        }
+
+
+        /*
+         * K-에듀파인용
+         */
+
+        const excelData = [
+
+          [
+            "내용",
+            "규격",
+            "단위",
+            "수량",
+            "예상단가"
+          ]
+
+        ];
+
+
+        items.forEach(
+          function(item) {
+
+            excelData.push([
+
+              item.product_name,
+
+              item.specification,
+
+              item.unit,
+
+              Number(
+                item.quantity
+              ),
+
+              Number(
+                item.unit_price
+              )
+
+            ]);
+
+          }
+        );
+
+
+        const worksheet =
+          XLSX
+            .utils
+            .aoa_to_sheet(
+              excelData
+            );
+
+
+        worksheet["!cols"] = [
+
+          {
+            wch: 35
+          },
+
+          {
+            wch: 25
+          },
+
+          {
+            wch: 10
+          },
+
+          {
+            wch: 10
+          },
+
+          {
+            wch: 15
+          }
+
+        ];
+
+
+        const workbook =
+          XLSX
+            .utils
+            .book_new();
+
+
+        XLSX
+          .utils
+          .book_append_sheet(
+
+            workbook,
+
+            worksheet,
+
+            "품목내역"
+
+          );
+
+
+        XLSX.writeFile(
+
+          workbook,
+
+          "품목내역(통합).xlsx"
+
+        );
+
+
+        showToast(
+          "Excel 파일을 다운로드했습니다."
+        );
+
+      }
+    );
+
+
+
+  /* ========================================================
+     경고
+  ======================================================== */
+
+
+  function renderWarnings() {
+
+    if (
+      currentWarnings.length ===
+      0
+    ) {
+
+      warningBox.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    warningBox.style.display =
+      "block";
+
+
+    warningBox.innerHTML =
+      "";
+
+
+    const strong =
+      document.createElement(
+        "strong"
+      );
+
+
+    strong.textContent =
+      "⚠️ AI 확인사항";
+
+
+    warningBox.appendChild(
+      strong
+    );
+
+
+    currentWarnings.forEach(
+      function(warning) {
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.textContent =
+          "• " +
+          warning;
+
+
+        warningBox.appendChild(
+          div
+        );
+
+      }
+    );
+
+  }
+
+
+
+  /* ========================================================
+     공통
+  ======================================================== */
+
+
+  function getOriginalTitle() {
+
+    return document
+      .getElementById(
+        "title"
+      )
+      .value
+      .trim();
+
+  }
+
+
+
+  function getRelatedDoc() {
+
+    return document
+      .getElementById(
+        "relatedDoc"
+      )
+      .value
+      .trim();
+
+  }
+
+
+
+  function confidenceIcon(
+    confidence
+  ) {
+
+    if (
+      confidence ===
+      "high"
+    ) {
+
+      return "✅";
+
+    }
+
+
+    if (
+      confidence ===
+      "medium"
+    ) {
+
+      return "⚠️";
+
+    }
+
+
+    return "❗";
+
+  }
+
+
+
+  function formatMoney(
+    value
+  ) {
+
+    return Number(
+      value || 0
+    )
+      .toLocaleString(
+        "ko-KR"
+      ) +
+      "원";
+
+  }
+
+
+
+  function showMessage(
+    text
+  ) {
+
+    message.textContent =
+      text;
+
+
+    message.style.display =
+      "block";
+
+  }
+
+
+
+  function hideMessage() {
+
+    message.style.display =
+      "none";
+
+  }
+
+
+
+  function resetButton() {
+
+    makeButton.disabled =
+      false;
+
+
+    makeButton.textContent =
+      "🪄 품의 만들기";
+
+  }
+
+
+
+  function showToast(
+    text
+  ) {
+
+    toast.textContent =
+      text;
+
+
+    toast.style.display =
+      "block";
+
+
+    clearTimeout(
+      window.toastTimer
+    );
+
+
+    window.toastTimer =
+      setTimeout(
+        function() {
+
+          toast.style.display =
+            "none";
+
+        },
+        1800
+      );
+
+  }
+
 
 </script>
 
+
 </body>
+
 </html>
